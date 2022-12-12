@@ -1,0 +1,75 @@
+/* Report Issue Form */
+
+#report-form {
+    text-align: left;
+    overflow: hidden;
+}
+
+#report-form .form-group {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding-top: 1.9vh;
+    
+}
+
+input[type=text], input[type=tel], input[type=password] {
+    width: 100%;
+    background-color: var(--clr-background);
+    height: 40px;
+    font-size: 20px;
+    border: var(--clr-border) 3px solid;
+    color: var(--clr-dark);
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+
+
+label {
+    margin-top: 0.6rem;
+}
+
+#Description {
+    height: 100px;
+
+
+}
+
+
+.btn {
+    width: 100%;
+    height: 40px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    border: none;
+    background-color: var(--clr-light-transparent);
+    color: var(--clr-dark);
+    font-size: 2.5vh;
+}
+
+.btn:hover{
+    background-color: var(--clr-accent);
+    font-weight: bold;
+
+}
+
+#button-standout{
+    border: 3px solid var(--clr-dark);
+}
+
+/* Radio box */
+
+input[type="radio"] {
+    margin-right: 2px;
+  }
+
+.radioBox {
+    display: flex;
+    justify-content: start;
+}
+
+.radioBoxChoice {
+    padding-left: 10px;
+    padding-right: 15px;
+
+}

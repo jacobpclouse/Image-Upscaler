@@ -1,9 +1,10 @@
 # Full Stack Image Upscaler
 - __Upload any image and watch as it is upscaled with Python__
-
+- __Lets you Colorize black and white images__
+(will create app backend 1st then replace with react front end)
 
 ## Technologies Used: 
-- Python/Django (Backend)
+- Python/Flask (Backend)
 - React/JavaScript (Frontend)
 - Bootstrap
 - Fontawesome (Icons)
@@ -16,7 +17,13 @@
 - [ ] Backend recieves it and upscales it
 - [ ] User redirected to display page
 - [ ] User can view image and send via email or MMS
+- [ ] Route to Colorize B&W Images
 
 
 ## Resources: 
+- ** OpenCV image upscaling: https://towardsdatascience.com/deep-learning-based-super-resolution-with-opencv-4fd736678066
+- Colorizing Images with python:
+- * Geeks for geeks colorizing: https://www.geeksforgeeks.org/black-and-white-image-colorization-with-opencv-and-deep-learning/
+- * pyimagesearch: https://pyimagesearch.com/2019/02/25/black-and-white-image-colorization-with-opencv-and-deep-learning/
+- Make pretty CSS: https://neumorphism.io/#e0e0e0
 - 

@@ -1,0 +1,34 @@
+/* Upper Dashboard Container */
+.dashboard-selections{
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+/* Left Dashboard Container */
+
+
+.dash-left,
+.dash-right {
+    width: 95%;
+    background-color: var(--clr-background);
+    margin-bottom: 20px;
+    text-align: center;
+    border: var(--clr-light) 3px solid;
+    color: var(--clr-dark);
+    min-height: 20vh;
+}
+
+.dash-right{
+    border: var(--clr-accent) 3px solid;
+}
+
+
+
+.dash-left h1,
+.dash-right h1 {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+

@@ -1,0 +1,269 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0;
+    margin: 0;
+    background: #FBF3F2;
+}
+
+/* CSS Variables */
+
+:root {
+    --clr-background: #FBF3F2; 
+    --clr-dark: #032539;
+    --clr-drk-v2: #063b5c;
+    --clr-light: #1C768F;
+    --clr-light-transparent: #1c768fcc;
+    --clr-accent: #FA991C;
+    --clr-border: #d3d3d3;
+}
+
+
+/* Global */
+
+.container{
+    width: 75%;
+    margin: auto;
+    overflow: hidden;
+}
+
+/* Header */
+header {
+    background: var(--clr-dark);
+    color: var(--clr-background);
+    padding-top: 30px;
+    min-height: 70px;
+    border-bottom: var(--clr-accent) 3px solid;
+}
+
+header a {
+    color: var(--clr-background);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+header ul {
+    margin: 0;
+    padding: 0;    
+}
+
+header li {
+    float: left;
+    display: inline;
+    padding: 0 20px 0 20px;
+}
+
+header #branding {
+    float: left;
+
+}
+
+header #branding h1 {
+    margin: 0;
+    margin-bottom: 5px; 
+}
+
+header nav {
+    float: right;
+    margin-top: 15px;
+}
+
+header .highlight, header .current a {
+    color: var(--clr-accent);
+    margin-top: 10px;
+}
+
+header a:hover {
+    color: var(--clr-accent);
+    font-weight: bold;
+}
+
+/* Flex Containers */
+
+.main-container {
+    display: flex;
+    flex-direction: row;
+    min-height: 90vh;
+    
+}
+
+    /* Left Container */
+
+.container-left {
+    display: flex;
+    font-size: 1.1rem;
+    font-weight: bold;
+    flex-direction: column;
+    width: 17%;
+    color: var(--clr-background);
+    background-color: var(--clr-drk-v2);
+    border-right: var(--clr-accent) 3px solid;
+}
+
+.container-left a {
+    color: var(--clr-background);
+    text-decoration: none;
+}
+
+.container-left-item {
+    
+    padding: .75em 2.5em .75em 2.5em;
+
+}
+
+#selected-page {
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+}
+
+.container-left-item:hover {
+    background: var(--clr-accent);
+    color: var(--clr-dark);
+    transform: scale(1.1);
+    transition: transform .25s;
+    overflow: hidden;
+}
+
+        /* Right Container */
+
+.container-right {
+    color: var(--clr-dark);
+    flex-direction: column;
+    width: 80%;
+    align-items: center;
+    padding-left: 2.5vw;
+}
+
+.container-right h1{
+    text-align: center;
+}
+
+/* Table */
+
+#issue-table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    padding-bottom: 50px;
+}
+
+    /* Scrolling */
+.scroll-div {
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 85%;
+}
+
+    /* Custom Scrollbar */
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+  
+  ::-webkit-scrollbar-track {
+    background: var(--clr-light-transparent); 
+}
+   
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--clr-drk-v2); 
+}
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--clr-dark); 
+}
+
+
+#issue-table th {
+    font-size: 18px;
+    top: 0;
+    z-index: 2;
+    position: sticky;
+    background-color: var(--clr-background);
+    padding-bottom: 10px;
+
+}
+
+#issue-table td {
+    padding: .5em 0 .5em 0;
+}
+
+#issue-table tr:hover td{ 
+    color: var(--clr-background);
+    background-color: var(--clr-light-transparent); 
+}
+
+    /* Table Search function */
+#search-input{
+    background-color: var(--clr-background);
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding-top: 12px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+    padding-left: 5px;
+    border: 1px solid var(--clr-light-transparent);
+    margin-bottom: 12px;
+  }
+
+
+/* Footer */
+
+footer {
+    padding:7px;
+    color:var(--clr-background);
+    background-color:var(--clr-dark);
+    text-align: center;
+    border-top: var(--clr-accent) 3px solid;
+
+    bottom: 0;
+    width: 100%;
+
+}
+
+/* Media Queries */
+
+/* standard tablet size */
+@media (max-width: 768px) {
+
+    header #branding,
+    header nav,
+    header nav li {
+        float: none;
+        text-align: center;
+        width: 100%;
+    }
+
+    header nav li {
+        display: block;
+    }
+
+    header {
+        padding-bottom: 20px;
+    }
+
+    .container-left { 
+        font-size: .75rem;
+    }
+
+}
+
+/* standard phone size */
+@media (max-width: 480px) {
+    #title h1 {
+        font-size: 40px;
+    }
+
+    #title p {
+        font-size: 15px;
+    }
+
+    
+}
