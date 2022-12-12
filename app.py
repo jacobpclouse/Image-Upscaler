@@ -48,9 +48,24 @@ def defang_datetime():
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Routes
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Route to upscale
 @app.route('/',methods=['GET', 'POST'])
-def mainRouteFunc():
-    return render_template('base.html')
+@app.route('/upscale',methods=['GET', 'POST'])
+def upscaleFunc():
+    uploaded_file = ''
+    title = "Upload Image to Upscale"
+
+    return render_template('upscale.html',html_title = title)
+
+
+# Route to colorize
+@app.route('/colorize',methods=['GET', 'POST'])
+def colorizeFunc():
+    uploaded_file = ''
+    title = "Upload Image to Colorize"
+    
+    return render_template('colorize.html',html_title = title)
+
 
 
 
