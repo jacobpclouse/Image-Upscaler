@@ -26,4 +26,4 @@
 - * Geeks for geeks colorizing: https://www.geeksforgeeks.org/black-and-white-image-colorization-with-opencv-and-deep-learning/
 - * pyimagesearch: https://pyimagesearch.com/2019/02/25/black-and-white-image-colorization-with-opencv-and-deep-learning/
 - Make pretty CSS: https://neumorphism.io/#e0e0e0
-- 
+- __How to connect Flask to ReactJs__: https://dev.to/nagatodev/how-to-connect-flask-to-reactjs-1k8i
