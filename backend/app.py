@@ -10,6 +10,10 @@ import cv2
 from cv2 import dnn_superres
 from werkzeug.utils import secure_filename
 
+import sendgrid
+from sendgrid.helpers.mail import Mail, Email, To, Content, Attachment, FileContent, FileName, FileType, Disposition
+import base64
+
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Variables
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -19,9 +23,15 @@ app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+upscaledFilename = 'upscaled.'
+desiredEmailFilename = 'JPC_Image_Upscaled.'
+
 pathToUploads = "./UPLOADS/"
 pathToOutbound = "./OUTBOUND/"
 pathToModels = './TrainedModels/'
+sourceEmail = "mp3converterandencryptor@gmail.com"
+subjectOfEmail = "Here is Your Upscaled Image"
+contentOfEmail = "We appreciate you using our service! You will need to download the attachment and you should be all set."
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Functions
@@ -61,7 +71,7 @@ def getExtension(inputFile):
 
 
 # --- Function used to upscale images
-def uppyBoi(inputFile,containingFolder,outboundFolder,currentExtension,modelPath):
+def uppyBoi(inputFile,containingFolder,outboundFolder,currentExtension,modelPath,upscaledFilename):
     print(f"Opening: {inputFile}")
     # Create an SR object
     sr = dnn_superres.DnnSuperResImpl_create()
@@ -80,7 +90,49 @@ def uppyBoi(inputFile,containingFolder,outboundFolder,currentExtension,modelPath
     result = sr.upsample(image)
 
     # Save the image
-    cv2.imwrite(f"{outboundFolder}upscaled.{currentExtension}", result)
+    cv2.imwrite(f"{outboundFolder}{upscaledFilename}{currentExtension}", result)
+
+
+# --- Function to send email with attachment
+def sendEmailFunc(sendFROMemail,sendTOemail,subjectLine,contentOfMessage,attachmentName,DesiredFilename,attachmentExtension,pathToAttachment):
+
+    current_datetime = defang_datetime() #getting datetime for the name of the file
+
+    # opening the file/decoding/saving it
+    with open(f'{pathToAttachment}{attachmentName}{attachmentExtension}', 'rb') as f:
+        data = f.read()
+        f.close()
+    encoded_file = base64.b64encode(data).decode()    
+
+    # saving api key in the environment
+    sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+
+    from_email = Email(f"{sendFROMemail}")  # Change to your verified sender
+    to_email = To(f"{sendTOemail}")  # Change to your recipient
+    subject = f"{subjectLine}!"
+    
+    html_content=Content('text/html', f'<h1>, Thank you for using JPC Image Upscaler!</h1><p>{contentOfMessage}</p><p><b>Date Sent: {current_datetime}</b></p>')
+    attachedFile = Attachment(
+        FileContent(encoded_file),
+        FileName(f'{current_datetime}__{DesiredFilename}'),
+        FileType(attachmentExtension), 
+        Disposition('attachment')
+    )
+
+    mail = Mail(from_email, to_email, subject, html_content)
+    mail.attachment = attachedFile  # tacking on the attachment
+
+    # Get a JSON-ready representation of the Mail object
+    mail_json = mail.get()
+
+    # Send an HTTP POST request to /mail/send
+    response = sg.client.mail.send.post(request_body=mail_json)
+    print(response.status_code)
+    print(response.headers)
+
+
+
+
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Routes
@@ -117,12 +169,12 @@ def upscaleFunc():
             # getting input with carrier = userCarrier in HTML form
             form_carrier = request.form.get("userCarrier")
             # getting input with send out method = send_out_choice in HTML form
-            form_encryption = request.form.get("send_out_choice")
+            form_send_out_option = request.form.get("send_out_choice")
 
             print(f"User's Email: {form_email}")
             print(f"User's Phone: {form_phone}")
             print(f"User's Phone Carrier: {form_carrier}")
-            print(f"Want Send out? : {form_encryption}")
+            print(f"Want Send out? : {form_send_out_option}")
             # "email" or "sms" or "none" /\
 
             secureTheFile = secure_filename(file.filename)
@@ -134,8 +186,20 @@ def upscaleFunc():
             file.save(f"{pathToUploads}{filename}")
             uploaded_file = secureTheFile
 
-            # UPSCALE!!!
-            uppyBoi(filename,pathToUploads,pathToOutbound,extensionType,pathToModels)
+            # UPSCALE!!! - Careful, if image too big then it crashes!
+            uppyBoi(filename,pathToUploads,pathToOutbound,extensionType,pathToModels,upscaledFilename)
+
+            # checking to see if we should send out email of file
+            if form_send_out_option == 'email':
+                print("Sending email")
+                # sendEmailFunc(sendFROMemail,sendTOemail,subjectLine,contentOfMessage,attachmentName,DesiredFilename,attachmentExtension,pathToAttachment):
+                sendEmailFunc(form_email,sourceEmail,subjectOfEmail,contentOfEmail,upscaledFilename,desiredEmailFilename,extensionType,pathToOutbound)
+            
+            if form_send_out_option == 'sms':
+                print("Sending sms")
+
+
+
 
     return render_template('upscale.html',html_title = title)
 

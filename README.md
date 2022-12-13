@@ -28,3 +28,9 @@
 - Make pretty CSS: https://neumorphism.io/#e0e0e0
 - __How to connect Flask to ReactJs__: https://dev.to/nagatodev/how-to-connect-flask-to-reactjs-1k8i
 - Use sound library: https://www.npmjs.com/package/use-sound
+- Resize images with opencv:
+- * Tutorialkart: https://www.tutorialkart.com/opencv/python/opencv-python-resize-image/
+- * Geeks for geeks: https://www.geeksforgeeks.org/image-resizing-using-opencv-python/
+- sendgrid: free email templates and using email templates with the api:
+- * https://sendgrid.com/blog/create-html-emails/
+- * https://sendgrid.com/free-templates/
