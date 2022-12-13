@@ -19,8 +19,8 @@ app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-pathToUploads = "./_UPLOADS/"
-pathToOutbound = "./_OUTBOUND/"
+pathToUploads = "./UPLOADS/"
+pathToOutbound = "./OUTBOUND/"
 pathToModels = './TrainedModels/'
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -61,7 +61,7 @@ def getExtension(inputFile):
 
 
 # --- Function used to upscale images
-def upscaleFunc(inputFile,containingFolder,outboundFolder,currentExtension,modelPath):
+def uppyBoi(inputFile,containingFolder,outboundFolder,currentExtension,modelPath):
     print(f"Opening: {inputFile}")
     # Create an SR object
     sr = dnn_superres.DnnSuperResImpl_create()
@@ -80,7 +80,7 @@ def upscaleFunc(inputFile,containingFolder,outboundFolder,currentExtension,model
     result = sr.upsample(image)
 
     # Save the image
-    cv2.imwrite(f"{outboundFolder}upscaled{currentExtension}", result)
+    cv2.imwrite(f"{outboundFolder}upscaled.{currentExtension}", result)
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Routes
@@ -131,11 +131,11 @@ def upscaleFunc():
 
             # Filename below - Important for functions 
             filename = "Temp_Pic_Upload." + extensionType
-            file.save(os.path.join(app.config[pathToUploads], filename))
+            file.save(f"{pathToUploads}{filename}")
             uploaded_file = secureTheFile
 
             # UPSCALE!!!
-            upscaleFunc(filename,pathToUploads,pathToOutbound,extensionType,pathToModels)
+            uppyBoi(filename,pathToUploads,pathToOutbound,extensionType,pathToModels)
 
     return render_template('upscale.html',html_title = title)
 
