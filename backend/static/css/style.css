@@ -7,19 +7,19 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 0;
     margin: 0;
-    background: #FBF3F2;
+    background: #E5BE9E;
 }
 
 /* CSS Variables */
 
 :root {
-    --clr-background: #FBF3F2; 
-    --clr-dark: #032539;
-    --clr-drk-v2: #063b5c;
-    --clr-light: #1C768F;
-    --clr-light-transparent: #1c768fcc;
-    --clr-accent: #FA991C;
-    --clr-border: #d3d3d3;
+    --clr-background: #E5BE9E; 
+    --clr-dark: #361D2E;
+    --clr-drk-v2: #5f726a;
+    --clr-light: #CBC0AD;
+    --clr-light-transparent: #CBC0ADcc;
+    --clr-accent: #6e3b5e;
+    --clr-border: #fac794;
 }
 
 

@@ -6,16 +6,22 @@ import os
 from os import path
 import datetime
 
-
-app = Flask(__name__)
-app.secret_key = 'super secret key'
-app.config['SESSION_TYPE'] = 'filesystem'
+import cv2
+from cv2 import dnn_superres
+from werkzeug.utils import secure_filename
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Variables
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+app = Flask(__name__)
+app.secret_key = 'super secret key'
+app.config['SESSION_TYPE'] = 'filesystem'
 
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+pathToUploads = "./_UPLOADS/"
+pathToOutbound = "./_OUTBOUND/"
+pathToModels = './TrainedModels/'
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Functions
@@ -43,17 +49,93 @@ def defang_datetime():
     return current_datetime
 
 
+# --- Function used to find ending type for file AND checking to make sure that it is an allowed type
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
+# --- Function used to find ending type for file only (for creating temp pic in UPLOADS)
+def getExtension(inputFile):
+    return '.' and inputFile.rsplit(".",1)[1].lower()
+
+
+# --- Function used to upscale images
+def upscaleFunc(inputFile,containingFolder,outboundFolder,currentExtension,modelPath):
+    print(f"Opening: {inputFile}")
+    # Create an SR object
+    sr = dnn_superres.DnnSuperResImpl_create()
+
+    # Read image
+    image = cv2.imread(f'{containingFolder}{inputFile}')
+
+    # Read the desired model
+    path = f"{modelPath}EDSR_x3.pb"
+    sr.readModel(path)
+
+    # Set the desired model and scale to get correct pre- and post-processing
+    sr.setModel("edsr", 3)
+
+    # Upscale the image
+    result = sr.upsample(image)
+
+    # Save the image
+    cv2.imwrite(f"{outboundFolder}upscaled{currentExtension}", result)
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Routes
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 # Route to upscale
 @app.route('/',methods=['GET', 'POST'])
 @app.route('/upscale',methods=['GET', 'POST'])
 def upscaleFunc():
+
+    myLogo()
+
     uploaded_file = ''
     title = "Upload Image to Upscale"
+
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            # GRABBING FORM INFO -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+            # getting input with email = userEmail in HTML form
+            form_email = request.form.get("userEmail")
+            # getting input with email = userEmail in HTML form
+            form_phone = request.form.get("userPhone")
+            # getting input with carrier = userCarrier in HTML form
+            form_carrier = request.form.get("userCarrier")
+            # getting input with send out method = send_out_choice in HTML form
+            form_encryption = request.form.get("send_out_choice")
+
+            print(f"User's Email: {form_email}")
+            print(f"User's Phone: {form_phone}")
+            print(f"User's Phone Carrier: {form_carrier}")
+            print(f"Want Send out? : {form_encryption}")
+            # "email" or "sms" or "none" /\
+
+            secureTheFile = secure_filename(file.filename)
+            extensionType = getExtension(secureTheFile)
+            print(f"Current Extension: {extensionType}")
+
+            # Filename below - Important for functions 
+            filename = "Temp_Pic_Upload." + extensionType
+            file.save(os.path.join(app.config[pathToUploads], filename))
+            uploaded_file = secureTheFile
+
+            # UPSCALE!!!
+            upscaleFunc(filename,pathToUploads,pathToOutbound,extensionType,pathToModels)
 
     return render_template('upscale.html',html_title = title)
 
