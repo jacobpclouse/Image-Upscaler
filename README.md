@@ -15,11 +15,12 @@ NOTE: Remember to enter 'source sendgrid.env' before running app.py (for sendgri
 
 
 ## Objectives / Goals:
-- [ ] Able to upload image (specify quality?)
-- [ ] Backend recieves it and upscales it
+- [x] Able to upload image (specify quality?)
+- [x] Backend recieves it and upscales it
 - [ ] User redirected to display page
 - [ ] User can view image and send via email or MMS
-- [ ] Route to Colorize B&W Image
+- [ ] Route to Colorize B&W Image Page
+- [ ] Route to Resize Image Page
 
 
 ## Resources: 
