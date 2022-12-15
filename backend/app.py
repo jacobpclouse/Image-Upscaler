@@ -99,7 +99,8 @@ def sendEmailFunc(sendFROMemail,sendTOemail,subjectLine,contentOfMessage,attachm
     current_datetime = defang_datetime() #getting datetime for the name of the file
 
     # opening the file/decoding/saving it
-    with open(f'{pathToAttachment}{attachmentName}{attachmentExtension}', 'rb') as f:
+    # with open(f'{pathToAttachment}{attachmentName}{attachmentExtension}', 'rb') as f:
+    with open(f'./a.jpg', 'rb') as f:
         data = f.read()
         f.close()
     encoded_file = base64.b64encode(data).decode()    
@@ -109,12 +110,14 @@ def sendEmailFunc(sendFROMemail,sendTOemail,subjectLine,contentOfMessage,attachm
 
     from_email = Email(f"{sendFROMemail}")  # Change to your verified sender
     to_email = To(f"{sendTOemail}")  # Change to your recipient
-    subject = f"{subjectLine}!"
+    # subject = f"{subjectLine}!"
+    subject = "Here is your Upscaled Image!"
     
     html_content=Content('text/html', f'<h1>, Thank you for using JPC Image Upscaler!</h1><p>{contentOfMessage}</p><p><b>Date Sent: {current_datetime}</b></p>')
     attachedFile = Attachment(
         FileContent(encoded_file),
-        FileName(f'{current_datetime}__{DesiredFilename}'),
+        # FileName(f'{current_datetime}__{DesiredFilename}'),
+        FileName(f'{current_datetime}__upscaled'),
         FileType(attachmentExtension), 
         Disposition('attachment')
     )
@@ -193,7 +196,7 @@ def upscaleFunc():
             if form_send_out_option == 'email':
                 print("Sending email")
                 # sendEmailFunc(sendFROMemail,sendTOemail,subjectLine,contentOfMessage,attachmentName,DesiredFilename,attachmentExtension,pathToAttachment):
-                sendEmailFunc(form_email,sourceEmail,subjectOfEmail,contentOfEmail,upscaledFilename,desiredEmailFilename,extensionType,pathToOutbound)
+                sendEmailFunc(sourceEmail,form_email,subjectOfEmail,contentOfEmail,upscaledFilename,desiredEmailFilename,extensionType,pathToOutbound)
             
             if form_send_out_option == 'sms':
                 print("Sending sms")
