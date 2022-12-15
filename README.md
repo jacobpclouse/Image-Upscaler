@@ -34,3 +34,6 @@
 - sendgrid: free email templates and using email templates with the api:
 - * https://sendgrid.com/blog/create-html-emails/
 - * https://sendgrid.com/free-templates/
+- Sendgrid API keys: https://docs.sendgrid.com/ui/account-and-settings/api-keys
+- Gmail App Passwords (For Sendgrid): https://wpmailsmtp.com/gmail-less-secure-apps/#Option_2_Use_an_App_Password
+- Gmail Docs: App passwords: https://support.google.com/accounts/answer/185833?hl=en
