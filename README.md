@@ -3,6 +3,8 @@
 - __Lets you Colorize black and white images__
 (will create app backend 1st then replace with react front end)
 
+NOTE: Remember to enter 'source sendgrid.env' before running app.py (for sendgrid)
+
 ## Technologies Used: 
 - Python/Flask (Backend)
 - React/JavaScript (Frontend)
@@ -17,7 +19,7 @@
 - [ ] Backend recieves it and upscales it
 - [ ] User redirected to display page
 - [ ] User can view image and send via email or MMS
-- [ ] Route to Colorize B&W Images
+- [ ] Route to Colorize B&W Image
 
 
 ## Resources: 
