@@ -36,16 +36,28 @@
         <option value="Xfinity Mobile">Xfinity Mobile</option>
       </select>
 
-       <!-- Radio button to choose how to send out put to user -->
+
+       <!-- Radio button to choose if user wants output colorized -->
+       <div class="colorizedChoice"> 
+        <label for="yes" class="radioBoxChoice">
+          <input type="radio" class="radioBoxChoice" id="yes" name="colorized_choice" value="yes" checked="checked"><label for="yes"> Please Colorize this Image</label><br>
+        </label>  
+        <label for="no" class="radioBoxChoice">
+          <input type="radio" class="radioBoxChoice" id="no" name="colorized_choice" value="no"><label for="no"> Do Not Colorize this Image</label><br>
+        </label>
+      </div>
+
+
+       <!-- Radio button to choose how to send output to user -->
       <div class="sendOut"> 
         <label for="email" class="sendOutChoice">
           <input type="radio" class="sendOutChoice" id="email" name="send_out_choice" value="email" checked="checked"><label for="email"> Send via Email</label><br>
         </label>  
-        <label for="sms" class="radioBoxChoice">
-          <input type="radio" class="radioBoxChoice" id="sms" name="send_out_choice" value="sms"><label for="sms"> Send via SMS</label><br>
+        <label for="sms" class="sendOutChoice">
+          <input type="radio" class="sendOutChoice" id="sms" name="send_out_choice" value="sms"><label for="sms"> Send via SMS</label><br>
         </label>
-        <label for="none" class="radioBoxChoice">
-          <input type="radio" class="radioBoxChoice" id="none" name="send_out_choice" value="none"><label for="sms"> Don't Send</label><br>
+        <label for="none" class="sendOutChoice">
+          <input type="radio" class="sendOutChoice" id="none" name="send_out_choice" value="none"><label for="sms"> Don't Send</label><br>
         </label>
       </div>
 

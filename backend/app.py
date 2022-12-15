@@ -99,8 +99,8 @@ def sendEmailFunc(sendFROMemail,sendTOemail,subjectLine,contentOfMessage,attachm
     current_datetime = defang_datetime() #getting datetime for the name of the file
 
     # opening the file/decoding/saving it
-    # with open(f'{pathToAttachment}{attachmentName}{attachmentExtension}', 'rb') as f:
-    with open(f'./a.jpg', 'rb') as f:
+    with open(f'{pathToAttachment}{attachmentName}{attachmentExtension}', 'rb') as f:
+    # with open(f'./a.jpg', 'rb') as f:
         data = f.read()
         f.close()
     encoded_file = base64.b64encode(data).decode()    
@@ -111,18 +111,18 @@ def sendEmailFunc(sendFROMemail,sendTOemail,subjectLine,contentOfMessage,attachm
     from_email = Email(f"{sendFROMemail}")  # Change to your verified sender
     to_email = To(f"{sendTOemail}")  # Change to your recipient
     # subject = f"{subjectLine}!"
-    subject = "Here is your Upscaled Image!"
+    # subject = "Here is your Upscaled Image!"
     
-    html_content=Content('text/html', f'<h1>, Thank you for using JPC Image Upscaler!</h1><p>{contentOfMessage}</p><p><b>Date Sent: {current_datetime}</b></p>')
+    html_content=Content('text/html', f'<h1>Thank you for using JPC Image Upscaler!</h1><p>{contentOfMessage}</p><p><b>Date Sent: {current_datetime}</b></p>')
     attachedFile = Attachment(
         FileContent(encoded_file),
-        # FileName(f'{current_datetime}__{DesiredFilename}'),
-        FileName(f'{current_datetime}__upscaled'),
+        FileName(f'{current_datetime}__{DesiredFilename}'),
+        #FileName(f'{current_datetime}__upscaled'),
         FileType(attachmentExtension), 
         Disposition('attachment')
     )
 
-    mail = Mail(from_email, to_email, subject, html_content)
+    mail = Mail(from_email, to_email, subjectLine, html_content)
     mail.attachment = attachedFile  # tacking on the attachment
 
     # Get a JSON-ready representation of the Mail object
@@ -171,12 +171,15 @@ def upscaleFunc():
             form_phone = request.form.get("userPhone")
             # getting input with carrier = userCarrier in HTML form
             form_carrier = request.form.get("userCarrier")
+            # getting input with colorize choice = colorized_choice in HTML form
+            form_colorized_option = request.form.get("colorized_choice")
             # getting input with send out method = send_out_choice in HTML form
             form_send_out_option = request.form.get("send_out_choice")
 
             print(f"User's Email: {form_email}")
             print(f"User's Phone: {form_phone}")
             print(f"User's Phone Carrier: {form_carrier}")
+            print(f"Want Colorized? : {form_colorized_option}") # Binary yes or no
             print(f"Want Send out? : {form_send_out_option}")
             # "email" or "sms" or "none" /\
 
@@ -191,6 +194,10 @@ def upscaleFunc():
 
             # UPSCALE!!! - Careful, if image too big then it crashes!
             uppyBoi(filename,pathToUploads,pathToOutbound,extensionType,pathToModels,upscaledFilename)
+
+            # COLORIZE?? - Checks to see if option set, if yes then colorizes and overwrites upscaled
+            if form_colorized_option == 'yes':
+                print('Colorizing!')
 
             # checking to see if we should send out email of file
             if form_send_out_option == 'email':
