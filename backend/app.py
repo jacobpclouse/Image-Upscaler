@@ -1,18 +1,25 @@
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Importing Libraries / Modules 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# flask / general imports
 from flask import Flask, flash, request, redirect, url_for, render_template,send_from_directory, jsonify, Response
 import os
 from os import path
 import datetime
 
+# upscaling imports
 import cv2
 from cv2 import dnn_superres
 from werkzeug.utils import secure_filename
 
+# email / sendgrid imports
 import sendgrid
 from sendgrid.helpers.mail import Mail, Email, To, Content, Attachment, FileContent, FileName, FileType, Disposition
 import base64
+
+# colorize imports
+import numpy as np
+import argparse
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Variables
@@ -29,9 +36,12 @@ desiredEmailFilename = 'JPC_Image_Upscaled.'
 pathToUploads = "./UPLOADS/"
 pathToOutbound = "./OUTBOUND/"
 pathToModels = './TrainedModels/'
+# email vars
 sourceEmail = "mp3converterandencryptor@gmail.com"
 subjectOfEmail = "Here is Your Upscaled Image"
 contentOfEmail = "We appreciate you using our service! You will need to download the attachment and you should be all set."
+# colorize vars
+
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Functions
@@ -134,6 +144,10 @@ def sendEmailFunc(sendFROMemail,sendTOemail,subjectLine,contentOfMessage,attachm
     print(response.headers)
 
 
+# --- Function to colorize image
+def colorizeImage(origImage,pathToImg,extensionType):
+    img_path = f"{pathToImg}{origImage}{extensionType}"
+    print(f"Location of Target Image: {img_path}")
 
 
 
@@ -198,6 +212,7 @@ def upscaleFunc():
             # COLORIZE?? - Checks to see if option set, if yes then colorizes and overwrites upscaled
             if form_colorized_option == 'yes':
                 print('Colorizing!')
+
 
             # checking to see if we should send out email of file
             if form_send_out_option == 'email':
