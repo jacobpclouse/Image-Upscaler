@@ -170,14 +170,13 @@ def colorizeImage(origImage,pathToImg,extensionType):
     out_img_eccv16 = postprocess_tens(tens_l_orig, colorizer_eccv16(tens_l_rs).cpu())
     out_img_siggraph17 = postprocess_tens(tens_l_orig, colorizer_siggraph17(tens_l_rs).cpu())
 
-    # plt.imsave(f'{origImage}_eccv16.{extensionType}', out_img_eccv16)
-    # plt.imsave(f'{origImage}_siggraph17.{extensionType}', out_img_siggraph17)
-    colorizedImageName1 = f'colorized_{origImage}1.{extensionType}'
-    colorizedImageName2 = f'colorized_{origImage}2.{extensionType}'
-    plt.imsave(colorizedImageName1, out_img_eccv16)
-    plt.imsave(colorizedImageName2, out_img_siggraph17)
+    # # plt.imsave(f'{origImage}_eccv16.{extensionType}', out_img_eccv16)
+    # # plt.imsave(f'{origImage}_siggraph17.{extensionType}', out_img_siggraph17)
+    # colorizedImageName1 = f'colorized_{origImage}1.{extensionType}'
+    # colorizedImageName2 = f'colorized_{origImage}2.{extensionType}'
+    plt.imsave(f"{pathToOutbound}colorizedImage1.png", out_img_eccv16)
+    plt.imsave(f"{pathToOutbound}colorizedImage2.png", out_img_siggraph17)
 
-    # move colorized images into a zip file and then send them off
 
 
 
