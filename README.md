@@ -41,3 +41,7 @@ NOTE: Remember to enter 'source sendgrid.env' before running app.py (for sendgri
 - Gmail App Passwords (For Sendgrid): https://wpmailsmtp.com/gmail-less-secure-apps/#Option_2_Use_an_App_Password
 - Gmail Docs: App passwords: https://support.google.com/accounts/answer/185833?hl=en
 - Sendgrid 403 Error: https://stackoverflow.com/questions/59739152/getting-a-strange-error-403-forbidden-for-accessing-an-api-through-python
+- Colorization github script by Richard Zhang, Phillip Isola, Alexei A. Efros. : 
+- * https://github.com/richzhang/colorization/
+- * https://github.com/richzhang/colorization/tree/caffe
+
