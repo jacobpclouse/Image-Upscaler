@@ -217,6 +217,7 @@ def emptyFolder(directoryPath):
 def upscaleFunc():
 
     myLogo()
+    print("\n\n UPSCALED PAGE \n\n")
 
     uploaded_file = ''
     title = "Upload Image to Upscale"
@@ -309,7 +310,7 @@ def upscaleFunc():
 def colorizeFunc():
 
     myLogo()
-    print("\n\n COLORIZED \n\n")
+    print("\n\n COLORIZED PAGE \n\n")
 
     uploaded_file = ''
     title = "Upload Image to Colorize"
@@ -358,6 +359,28 @@ def colorizeFunc():
             # Create a zip of all the contents in the Outbound folder
             copyAndZip(pathToOutbound,sendThisZip)
 
+
+            # checking to see if we should send out email of file
+            if form_send_out_option == 'email':
+                print("Sending email")
+                sendEmailFunc(sourceEmail,form_email,subjectOfEmail,contentOfEmail,sendThisZip,desiredEmailFilename,'.zip',pathToOutbound)
+            
+            if form_send_out_option == 'sms':
+                print("Sending sms")
+
+
+# """ This Will let the user download the file, then deletes all files in outbound and uploads """
+            try:
+                
+                return send_from_directory(pathToOutbound,f"{sendThisZip}.zip",as_attachment=True)
+                
+            except FileNotFoundError:
+                os.abort(404)
+
+            finally:
+                # this cleans out both upload and outbound folders
+                emptyFolder("./OUTBOUND")
+                emptyFolder("./UPLOADS")
 
 
     
