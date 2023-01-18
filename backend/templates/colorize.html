@@ -7,12 +7,6 @@
     <h1>{% block title %} {{html_title}} {% endblock %}</h1>
     <form method=post enctype=multipart/form-data>
       <!-- Adding form data fields below -->
-      <label for="firstname">Enter your First Name:</label>
-      <input type="text" id="firstname" name="fname" placeholder="Your First Name Here" required>
-
-      <label for="lastname">Enter your Last Name:</label>
-      <input type="text" id="lastname" name="lname" placeholder="Your Last Name Here" required>
-
       <label for="email">Enter your email address:</label>
       <input type="text" id="email" name="userEmail" placeholder="youremail@example.com" required>
 
@@ -42,15 +36,28 @@
         <option value="Xfinity Mobile">Xfinity Mobile</option>
       </select>
 
+       <!-- Radio button to choose how to send output to user -->
+       <div class="sendOut"> 
+        <label for="email" class="sendOutChoice">
+          <input type="radio" class="sendOutChoice" id="email" name="send_out_choice" value="email" checked="checked"><label for="email"> Send via Email</label><br>
+        </label>  
+        <label for="sms" class="sendOutChoice">
+          <input type="radio" class="sendOutChoice" id="sms" name="send_out_choice" value="sms"><label for="sms"> Send via SMS</label><br>
+        </label>
+        <label for="none" class="sendOutChoice">
+          <input type="radio" class="sendOutChoice" id="none" name="send_out_choice" value="none"><label for="sms"> Don't Send</label><br>
+        </label>
+      </div>
+
        <!-- Radio button to choose wheter or not this will be encrypted -->
-       <div class="radioBox"> 
+       <!-- <div class="radioBox"> 
         <label for="encrypt" class="radioBoxChoice">
           <input type="radio" class="radioBoxChoice" id="encrypt" name="encryption_choice" value="encrypt" checked="checked"><label for="encrypt">I want the data to be encrypted</label><br>
         </label>  
         <label for="plaintext" class="radioBoxChoice">
           <input type="radio" class="radioBoxChoice" id="plaintext" name="encryption_choice" value="plaintext"><label for="plaintext"> I want the data to be plantext</label><br>
         </label>
-      </div>
+      </div> -->
 
       <!-- Below: file upload section -->
       <input type=file name=file >

@@ -261,8 +261,54 @@ def upscaleFunc():
 # Route to colorize
 @app.route('/colorize',methods=['GET', 'POST'])
 def colorizeFunc():
+
+    myLogo()
+    print("\n\n COLORIZED \n\n")
+
     uploaded_file = ''
     title = "Upload Image to Colorize"
+
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            # GRABBING FORM INFO -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+            # getting input with email = userEmail in HTML form
+            form_email = request.form.get("userEmail")
+            # getting input with email = userEmail in HTML form
+            form_phone = request.form.get("userPhone")
+            # getting input with carrier = userCarrier in HTML form
+            form_carrier = request.form.get("userCarrier")
+
+            # getting input with send out method = send_out_choice in HTML form
+            form_send_out_option = request.form.get("send_out_choice")
+
+            print(f"User's Email: {form_email}")
+            print(f"User's Phone: {form_phone}")
+            print(f"User's Phone Carrier: {form_carrier}")
+            print(f"Want Send out? : {form_send_out_option}")
+            # "email" or "sms" or "none" /\
+
+            secureTheFile = secure_filename(file.filename)
+            extensionType = getExtension(secureTheFile)
+            print(f"Current Extension: {extensionType}")
+
+            # Filename below - Important for functions 
+            filename = "Temp_Pic_Upload." + extensionType
+            file.save(f"{pathToUploads}{filename}")
+
+            # Start colorization
+            colorizeImage("Temp_Pic_Upload.",pathToUploads,extensionType)
+
     
     return render_template('colorize.html',html_title = title)
 
