@@ -1,0 +1,71 @@
+<!-- This page uses 'base.html' as a template and builds off it -->
+{% extends 'base.html' %}
+
+
+<!-- Main Content For upload -->
+{% block content %}
+    <h1>{% block title %} {{html_title}} {% endblock %}</h1>
+    <form method=post enctype=multipart/form-data>
+      <!-- Adding form data fields below -->
+      <label for="email">Enter your email address:</label>
+      <input type="text" id="email" name="userEmail" placeholder="youremail@example.com" required>
+
+      <label for="phone">Enter your phone number:</label>
+      <input type="tel" id="phone" name="userPhone" placeholder="518-867-5309" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+     
+      <!-- Phone Carrier Dropdown list - to be used with the providers.py file -->
+      <label for="carrier">Enter your phone carrier:</label>
+      <select id="carrier" name="userCarrier" required>
+        <option value="AT&T">AT&T</option>
+        <option value="C-Spire">C-Spire</option>
+        <option value="Cricket Wireless">Cricket Wireless</option>
+        <option value="Consumer Cellular">Consumer Cellular</option>
+        <option value="Google Project Fi">Google Project Fi</option>
+        <option value="Metro PCS">Metro PCS</option>
+        <option value="Mint Mobile">Mint Mobile</option>
+        <option value="Page Plus">Page Plus</option>
+        <option value="Republic Wireless">Republic Wireless</option>
+        <option value="Sprint">Sprint</option>
+        <option value="Straight Talk">Straight Talk</option>
+        <option value="T-Mobile">T-Mobile</option>
+        <option value="Ting">Ting</option>
+        <option value="Tracfone">Tracfone</option>
+        <option value="U.S. Cellular">U.S. Cellular</option>
+        <option value="Verizon">Verizon</option>
+        <option value="Virgin Mobile">Virgin Mobile</option>
+        <option value="Xfinity Mobile">Xfinity Mobile</option>
+      </select>
+
+       <!-- Radio button to choose how to send output to user -->
+       <div class="sendOut"> 
+        <label for="email" class="sendOutChoice">
+          <input type="radio" class="sendOutChoice" id="email" name="send_out_choice" value="email" checked="checked"><label for="email"> Send via Email</label><br>
+        </label>  
+        <label for="sms" class="sendOutChoice">
+          <input type="radio" class="sendOutChoice" id="sms" name="send_out_choice" value="sms"><label for="sms"> Send via SMS</label><br>
+        </label>
+        <label for="none" class="sendOutChoice">
+          <input type="radio" class="sendOutChoice" id="none" name="send_out_choice" value="none"><label for="sms"> Don't Send</label><br>
+        </label>
+      </div>
+
+       <!-- Radio button to choose wheter or not this will be encrypted -->
+       <!-- <div class="radioBox"> 
+        <label for="encrypt" class="radioBoxChoice">
+          <input type="radio" class="radioBoxChoice" id="encrypt" name="encryption_choice" value="encrypt" checked="checked"><label for="encrypt">I want the data to be encrypted</label><br>
+        </label>  
+        <label for="plaintext" class="radioBoxChoice">
+          <input type="radio" class="radioBoxChoice" id="plaintext" name="encryption_choice" value="plaintext"><label for="plaintext"> I want the data to be plantext</label><br>
+        </label>
+      </div> -->
+
+      <!-- Below: file upload section -->
+      <input type=file name=file >
+      <input type=submit value=Upload class="btn" id="button-standout">
+    </form>
+    <!-- https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/#a-gentle-introduction -->
+
+    {% if html_file != '' %}
+      <h5>File Uploaded: {% block html_file %} {{html_file}} {% endblock %}</h5>
+    {% endif %}
+{% endblock %}

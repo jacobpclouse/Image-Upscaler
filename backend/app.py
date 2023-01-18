@@ -466,6 +466,18 @@ def colorizeFunc():
     return render_template('colorize.html',html_title = title)
 
 
+# Route to resize
+@app.route('/resize',methods=['GET', 'POST'])
+def resizeFunc():
+
+    myLogo()
+    print("\n\n RESIZE PAGE \n\n")
+
+    uploaded_file = ''
+    title = "Upload Image to Resize"
+
+
+    return render_template('resize.html',html_title = title)
 
 
 # ----===--------===--------===--------===----
