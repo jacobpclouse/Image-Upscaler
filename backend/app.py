@@ -18,11 +18,14 @@ from sendgrid.helpers.mail import Mail, Email, To, Content, Attachment, FileCont
 import base64
 
 # colorize imports
-# import numpy as np
-# import argparse
 from colorizers import *
 import matplotlib.pyplot as plt
 
+# Zip imports
+from zipfile import ZipFile
+from os.path import basename
+import shutil
+from pathlib import Path # used to delete old files in folder
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Variables
@@ -33,8 +36,9 @@ app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+temporaryPictureName = 'Temp_Pic_Upload.'
 upscaledFilename = 'upscaled.'
-desiredEmailFilename = 'JPC_Image_Upscaled.'
+desiredEmailFilename = 'JPC_Upscaler_Colorizer_Files'
 
 pathToUploads = "./UPLOADS/"
 pathToOutbound = "./OUTBOUND/"
@@ -44,6 +48,10 @@ sourceEmail = "mp3converterandencryptor@gmail.com"
 subjectOfEmail = "Here is Your Upscaled Image"
 contentOfEmail = "We appreciate you using our service! You will need to download the attachment and you should be all set."
 # colorize vars
+outputFromColorized = 'colorizedImage'
+
+# outbound zip name
+sendThisZip = 'JPC-Upscaler-Colorizer'
 
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -170,14 +178,33 @@ def colorizeImage(origImage,pathToImg,extensionType):
     out_img_eccv16 = postprocess_tens(tens_l_orig, colorizer_eccv16(tens_l_rs).cpu())
     out_img_siggraph17 = postprocess_tens(tens_l_orig, colorizer_siggraph17(tens_l_rs).cpu())
 
-    # # plt.imsave(f'{origImage}_eccv16.{extensionType}', out_img_eccv16)
-    # # plt.imsave(f'{origImage}_siggraph17.{extensionType}', out_img_siggraph17)
-    # colorizedImageName1 = f'colorized_{origImage}1.{extensionType}'
-    # colorizedImageName2 = f'colorized_{origImage}2.{extensionType}'
-    plt.imsave(f"{pathToOutbound}colorizedImage1.png", out_img_eccv16)
-    plt.imsave(f"{pathToOutbound}colorizedImage2.png", out_img_siggraph17)
+
+    plt.imsave(f"{pathToOutbound}{outputFromColorized}1.png", out_img_eccv16)
+    plt.imsave(f"{pathToOutbound}{outputFromColorized}2.png", out_img_siggraph17)
 
 
+# --- Function to move relevant files to OUTBOUND and then create a zip to send to the customer
+def copyAndZip(destinationDirectory,outputZipFileName):
+    # copy readme into "OUTBOUND" Directory
+    shutil.copy('../README.md', destinationDirectory)
+
+    # make directory to be sent out via email
+    with ZipFile(f'{outputZipFileName}.zip','w') as myzip:
+        print("Zipping Files...")
+        # Iterate over all the files in directory
+        for folderName, subfolders, filenames in os.walk(destinationDirectory):
+            for filename in filenames:
+                #create complete filepath of file in directory
+                filePath = os.path.join(folderName, filename)
+                # Add file to zip
+                myzip.write(filePath, basename(filePath))
+
+    # Move the outgoing zip into the OUTBOUND folder 
+    shutil.move(f"{outputZipFileName}.zip", f"{pathToOutbound}{outputZipFileName}.zip")
+
+# --- Function to delete files inside directory (without deleting directory itself) ---
+def emptyFolder(directoryPath):
+    [f.unlink() for f in Path(directoryPath).glob("*") if f.is_file()] 
 
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -231,7 +258,7 @@ def upscaleFunc():
             print(f"Current Extension: {extensionType}")
 
             # Filename below - Important for functions 
-            filename = "Temp_Pic_Upload." + extensionType
+            filename = temporaryPictureName + extensionType
             file.save(f"{pathToUploads}{filename}")
             uploaded_file = secureTheFile
 
@@ -241,16 +268,35 @@ def upscaleFunc():
             # COLORIZE?? - Checks to see if option set, if yes then colorizes and overwrites upscaled
             if form_colorized_option == 'yes':
                 print('Colorizing!')
+                # Start colorization
+                colorizeImage(temporaryPictureName,pathToUploads,extensionType)
+
+            # Create a zip of all the contents in the Outbound folder
+            copyAndZip(pathToOutbound,sendThisZip)
 
 
             # checking to see if we should send out email of file
             if form_send_out_option == 'email':
                 print("Sending email")
-                # sendEmailFunc(sendFROMemail,sendTOemail,subjectLine,contentOfMessage,attachmentName,DesiredFilename,attachmentExtension,pathToAttachment):
-                sendEmailFunc(sourceEmail,form_email,subjectOfEmail,contentOfEmail,upscaledFilename,desiredEmailFilename,extensionType,pathToOutbound)
+                # sendEmailFunc(sourceEmail,form_email,subjectOfEmail,contentOfEmail,upscaledFilename,desiredEmailFilename,extensionType,pathToOutbound)
+                sendEmailFunc(sourceEmail,form_email,subjectOfEmail,contentOfEmail,sendThisZip,desiredEmailFilename,'.zip',pathToOutbound)
             
             if form_send_out_option == 'sms':
                 print("Sending sms")
+
+
+# """ This Will let the user download the file, then deletes all files in outbound and uploads """
+            try:
+                
+                return send_from_directory(pathToOutbound,f"{sendThisZip}.zip",as_attachment=True)
+                
+            except FileNotFoundError:
+                os.abort(404)
+
+            finally:
+                # this cleans out both upload and outbound folders
+                emptyFolder("./OUTBOUND")
+                emptyFolder("./UPLOADS")
 
 
 
@@ -303,11 +349,16 @@ def colorizeFunc():
             print(f"Current Extension: {extensionType}")
 
             # Filename below - Important for functions 
-            filename = "Temp_Pic_Upload." + extensionType
+            filename = temporaryPictureName + extensionType
             file.save(f"{pathToUploads}{filename}")
 
             # Start colorization
-            colorizeImage("Temp_Pic_Upload.",pathToUploads,extensionType)
+            colorizeImage(temporaryPictureName,pathToUploads,extensionType)
+
+            # Create a zip of all the contents in the Outbound folder
+            copyAndZip(pathToOutbound,sendThisZip)
+
+
 
     
     return render_template('colorize.html',html_title = title)
