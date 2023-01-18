@@ -27,6 +27,16 @@ from os.path import basename
 import shutil
 from pathlib import Path # used to delete old files in folder
 
+# MMS Imports
+import email, smtplib, ssl
+from providers import PROVIDERS
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+
+
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Variables
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -52,6 +62,13 @@ outputFromColorized = 'colorizedImage'
 
 # outbound zip name
 sendThisZip = 'JPC-Upscaler-Colorizer'
+
+# MMS info
+mmsSenderEmail = "mp3converterandencryptor@gmail.com"
+mmsAppKey = "vunbouvogkeazgxp"
+mineMain = "application"
+mineSub= 'zip'
+myMMSMessage = 'Here are the files you requested: '
 
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -207,6 +224,62 @@ def emptyFolder(directoryPath):
     [f.unlink() for f in Path(directoryPath).glob("*") if f.is_file()] 
 
 
+# --- Function to Send Zip file inside of MMS message ---
+def send_mms_via_email(
+    number: str,
+    message: str,
+    file_path: str,
+    mime_maintype: str,
+    mime_subtype: str,
+    provider: str,
+    sender_email,
+    email_password,
+    subject: str = "JPC Upscaler Results",
+    smtp_server: str = "smtp.gmail.com",
+    smtp_port: int = 465,
+):
+# ---
+
+    newTel = ''
+    for x in number:
+        # stripping out the dashes in order to send sms
+        if x != '-':
+            newTel = newTel + x
+
+    number = f"{newTel}"
+    print(f"Sending Text message to to: {number}, Message: {message}, Provider: {provider}")
+    
+    receiver_email = f'{number}@{PROVIDERS.get(provider).get("sms")}'
+
+    email_message=MIMEMultipart()
+    email_message["Subject"] = subject
+    email_message["From"] = sender_email
+    email_message["To"] = receiver_email
+
+    email_message.attach(MIMEText(message, "plain"))
+
+    with open(file_path, "rb") as attachment:
+        part = MIMEBase(mime_maintype, mime_subtype)
+        part.set_payload(attachment.read())
+
+        encoders.encode_base64(part)
+        part.add_header(
+            "Content-Disposition",
+            f"attachment; filename={basename(file_path)}",
+        )
+
+        email_message.attach(part)
+
+    text = email_message.as_string()
+
+    with smtplib.SMTP_SSL(
+        smtp_server, smtp_port, context=ssl.create_default_context()
+    ) as email:
+        email.login(sender_email, email_password)
+        email.sendmail(sender_email, receiver_email, text)
+
+
+
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Routes
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -283,7 +356,10 @@ def upscaleFunc():
                 sendEmailFunc(sourceEmail,form_email,subjectOfEmail,contentOfEmail,sendThisZip,desiredEmailFilename,'.zip',pathToOutbound)
             
             if form_send_out_option == 'sms':
-                print("Sending sms")
+                print("Sending MMS")
+                fullMMSPath = f"{pathToOutbound}{sendThisZip}.zip"
+                send_mms_via_email(form_phone,myMMSMessage,fullMMSPath,mineMain,mineSub,form_carrier,mmsSenderEmail,mmsAppKey)
+
 
 
 # """ This Will let the user download the file, then deletes all files in outbound and uploads """
@@ -366,7 +442,10 @@ def colorizeFunc():
                 sendEmailFunc(sourceEmail,form_email,subjectOfEmail,contentOfEmail,sendThisZip,desiredEmailFilename,'.zip',pathToOutbound)
             
             if form_send_out_option == 'sms':
-                print("Sending sms")
+                print("Sending MMS")
+                fullMMSPath = f"{pathToOutbound}{sendThisZip}.zip"
+                send_mms_via_email(form_phone,myMMSMessage,fullMMSPath,mineMain,mineSub,form_carrier,mmsSenderEmail,mmsAppKey)
+
 
 
 # """ This Will let the user download the file, then deletes all files in outbound and uploads """

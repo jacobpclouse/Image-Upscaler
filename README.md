@@ -18,8 +18,8 @@ NOTE: Remember to enter 'source sendgrid.env' before running app.py (for sendgri
 - [x] Able to upload image (specify quality?)
 - [x] Backend recieves it and upscales it
 - [ ] User redirected to display page
-- [ ] User can view image and send via email or MMS
-- [ ] Route to Colorize B&W Image Page
+- [x] User can view image and send via email or MMS (NOTE: attachments blocked on phone, size too big?)
+- [x] Route to Colorize B&W Image Page
 - [ ] Route to Resize Image Page
 
 
@@ -44,4 +44,4 @@ NOTE: Remember to enter 'source sendgrid.env' before running app.py (for sendgri
 - Colorization github script by Richard Zhang, Phillip Isola, Alexei A. Efros. : 
 - * https://github.com/richzhang/colorization/
 - * https://github.com/richzhang/colorization/tree/caffe
-
+- Send text messages for free with sms gateways: https://www.youtube.com/watch?v=4-ysecoraKo
