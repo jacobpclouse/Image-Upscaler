@@ -23,6 +23,17 @@ input[type=text], input[type=tel], input[type=password] {
     word-break: break-all;
 }
 
+input[type=number] {
+    width: 29%;
+    background-color: var(--clr-background);
+    height: 40px;
+    font-size: 20px;
+    border: var(--clr-border) 3px solid;
+    color: var(--clr-dark);
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
 
 
 label {

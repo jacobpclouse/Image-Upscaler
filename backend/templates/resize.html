@@ -36,6 +36,16 @@
         <option value="Xfinity Mobile">Xfinity Mobile</option>
       </select>
 
+      <br>
+      
+       <!-- Height Box -->
+       <label for="height">Desired Height: </label>
+       <input type="number" id="height" name="userHeight" min="100" max="5000" placeholder="Between 100 and 5000" required>
+       
+       <!-- Width Box -->
+       <label for="width">Desired Width: </label>
+       <input type="number" id="width" name="userWidth" min="100" max="5000" placeholder="Between 100 and 5000" required>
+
        <!-- Radio button to choose how to send output to user -->
        <div class="sendOut"> 
         <label for="email" class="sendOutChoice">
@@ -49,15 +59,7 @@
         </label>
       </div>
 
-       <!-- Radio button to choose wheter or not this will be encrypted -->
-       <!-- <div class="radioBox"> 
-        <label for="encrypt" class="radioBoxChoice">
-          <input type="radio" class="radioBoxChoice" id="encrypt" name="encryption_choice" value="encrypt" checked="checked"><label for="encrypt">I want the data to be encrypted</label><br>
-        </label>  
-        <label for="plaintext" class="radioBoxChoice">
-          <input type="radio" class="radioBoxChoice" id="plaintext" name="encryption_choice" value="plaintext"><label for="plaintext"> I want the data to be plantext</label><br>
-        </label>
-      </div> -->
+
 
       <!-- Below: file upload section -->
       <input type=file name=file >

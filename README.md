@@ -17,10 +17,10 @@ NOTE: Remember to enter 'source sendgrid.env' before running app.py (for sendgri
 ## Objectives / Goals:
 - [x] Able to upload image (specify quality?)
 - [x] Backend recieves it and upscales it
-- [ ] User redirected to display page
+- ~~[ ] User redirected to display page~~
 - [x] User can view image and send via email or MMS (NOTE: attachments blocked on phone, size too big?)
 - [x] Route to Colorize B&W Image Page
-- [ ] Route to Resize Image Page
+- [x] Route to Resize Image Page
 
 
 ## Resources: 
@@ -45,3 +45,4 @@ NOTE: Remember to enter 'source sendgrid.env' before running app.py (for sendgri
 - * https://github.com/richzhang/colorization/
 - * https://github.com/richzhang/colorization/tree/caffe
 - Send text messages for free with sms gateways: https://www.youtube.com/watch?v=4-ysecoraKo
+- Python Image Resize With Pillow and OpenCV: https://cloudinary.com/guides/bulk-image-resize/python-image-resize-with-pillow-and-opencv

@@ -279,6 +279,15 @@ def send_mms_via_email(
         email.sendmail(sender_email, receiver_email, text)
 
 
+# --- Function to resize image (preserving aspect ratio) ---
+def resizePic(imageName,pathToImage,fileExtension,newHeight,newWidth,newName,pathToFinal):
+    print(f"Height: {newHeight}, Width: {newWidth}")
+    image = Image.open(f'{pathToImage}{imageName}{fileExtension}')
+    image.thumbnail((newHeight, newWidth))
+    print(f'{pathToFinal}{newName}.{fileExtension}')
+    image.save(f'{pathToFinal}{newName}.{fileExtension}')
+    print(image.size) # Output should preserve the desired aspect ratio
+
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Routes
@@ -475,6 +484,82 @@ def resizeFunc():
 
     uploaded_file = ''
     title = "Upload Image to Resize"
+
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            # GRABBING FORM INFO -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+            # getting input with email = userEmail in HTML form
+            form_email = request.form.get("userEmail")
+            # getting input with email = userEmail in HTML form
+            form_phone = request.form.get("userPhone")
+            # getting input with carrier = userCarrier in HTML form
+            form_carrier = request.form.get("userCarrier")
+            # getting input with form_height = userHeight in HTML form
+            form_height = int(request.form.get("userHeight"))
+            # getting input with form_width = userWidth in HTML form
+            form_width = int(request.form.get("userWidth"))
+
+            # getting input with send out method = send_out_choice in HTML form
+            form_send_out_option = request.form.get("send_out_choice")
+
+            print(f"User's Email: {form_email}")
+            print(f"User's Phone: {form_phone}")
+            print(f"User's Phone Carrier: {form_carrier}")
+            print(f"Want Send out? : {form_send_out_option}")
+            # "email" or "sms" or "none" /\
+            print(f"Height: {form_height}, Width: {form_width}")
+
+            secureTheFile = secure_filename(file.filename)
+            extensionType = getExtension(secureTheFile)
+            print(f"Current Extension: {extensionType}")
+
+            # Filename below - Important for functions 
+            filename = temporaryPictureName + extensionType
+            file.save(f"{pathToUploads}{filename}")
+
+
+            # Start resize
+            resizedPicName = f'resized-{form_height}x{form_width}'
+            resizePic(temporaryPictureName,pathToUploads,extensionType,form_height,form_width,resizedPicName,pathToOutbound)
+
+            # Create a zip of all the contents in the Outbound folder
+            copyAndZip(pathToOutbound,sendThisZip)
+
+
+            # checking to see if we should send out email of file
+            if form_send_out_option == 'email':
+                print("Sending email")
+                sendEmailFunc(sourceEmail,form_email,subjectOfEmail,contentOfEmail,sendThisZip,desiredEmailFilename,'.zip',pathToOutbound)
+            
+            if form_send_out_option == 'sms':
+                print("Sending MMS")
+                fullMMSPath = f"{pathToOutbound}{sendThisZip}.zip"
+                send_mms_via_email(form_phone,myMMSMessage,fullMMSPath,mineMain,mineSub,form_carrier,mmsSenderEmail,mmsAppKey)
+
+
+# """ This Will let the user download the file, then deletes all files in outbound and uploads """
+            try:
+                
+                return send_from_directory(pathToOutbound,f"{sendThisZip}.zip",as_attachment=True)
+                
+            except FileNotFoundError:
+                os.abort(404)
+
+            finally:
+                # this cleans out both upload and outbound folders
+                emptyFolder("./OUTBOUND")
+                emptyFolder("./UPLOADS")
 
 
     return render_template('resize.html',html_title = title)
